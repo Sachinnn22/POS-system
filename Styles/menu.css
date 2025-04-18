@@ -1,0 +1,36 @@
+body{
+    background-color: #ffffff;
+}
+
+.menu{
+    margin-top: 10px;
+
+}
+
+.menuus{
+    background-color: #a8a8a7;
+}
+
+
+.tech{
+    margin-left: 20px;
+    font-size: 25px;
+    color: #0c0b0b;
+    font-family: Helvetica;
+    font-weight: bolder;
+}
+.zone{
+    color: blue;
+    font-size: 25px;
+}
+.mybar{
+    font-weight: bolder;
+    font-size: 20px;
+    font-family: Helvetica ;
+}
+
+.navs a:hover{
+    transform: scale(1.1);
+    transition-duration: 4s;
+
+}
