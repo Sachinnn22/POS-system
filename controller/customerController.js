@@ -1,26 +1,26 @@
-import {customer_db} from "../db/db";
-import customerModel from "../model/customerModel";
+import { customer_db } from "../db/db.js";
+import CustomerModel from "../model/customerModel.js";
 
 export function loadCustomer() {
-    $("#customer-tbody").empty()
+    $("#customer-tbody").empty();
 
-    customer_db.map(function (item,index) {
+    customer_db.forEach((item, index) => {
         let data = `<tr>
-            <td>${index + 1}</td>
-            <td>${item.cusName}</td>
-            <td>${item.age}</td>
-            <td>${item.contact}</td>
-            <td>${item.address}</td>         
-        </tr>`
-
-    } );
+      <td>${index + 1}</td>
+      <td>${item.cusName}</td>
+      <td>${item.age}</td>
+      <td>${item.contact}</td>
+      <td>${item.address}</td>         
+    </tr>`;
+        $("#customer-tbody").append(data);
+    });
 }
 
 $("#customer-save").click(function () {
-    let cusName = $("#cusName").val()
-    let age = $("#age").val()
-    let contact = $("#contact").val()
-    let address = $("#address").val()
+    let cusName = $("#cusName").val();
+    let age = $("#age").val();
+    let contact = $("#contact").val();
+    let address = $("#address").val();
 
     if (cusName === '' || age === '' || contact === '' || address === '') {
         Swal.fire({
@@ -30,7 +30,7 @@ $("#customer-save").click(function () {
             confirmButtonText: 'Ok'
         });
     } else {
-        let customer_data = new customerModel(cusName,age,contact,address);
+        let customer_data = new CustomerModel(cusName, age, contact, address);
         customer_db.push(customer_data);
         console.log(customer_db);
 
@@ -42,14 +42,13 @@ $("#customer-save").click(function () {
             draggable: true
         });
     }
+});
 
-    $('#customer-reset').on('click', function () {
-        $('#cusName').val('');
-        $('#age').val('');
-        $('#contact').val('');
-        $('#address').val('');
+$('#customer-reset').on('click', function () {
+    $('#cusName').val('');
+    $('#age').val('');
+    $('#contact').val('');
+    $('#address').val('');
 
-        loadCustomer()
-    });
-
-})
+    loadCustomer();
+});
