@@ -40,6 +40,8 @@ $("#customer-save").click(function () {
             title: "Added Successfully!",
             icon: "success",
             draggable: true
+
+
         });
     }
 });
