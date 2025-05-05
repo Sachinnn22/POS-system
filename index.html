@@ -129,6 +129,9 @@
                         <h4 class="mb-4">Customer Entry Form</h4>
                         <form class="row g-3">
                             <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="Customer Id" id="cusId">
+                            </div>
+                            <div class="col-md-6">
                                 <input type="text" class="form-control" placeholder="Customer Name" id="cusName">
                             </div>
                             <div class="col-md-6">
@@ -142,8 +145,8 @@
                             </div>
                             <div class="col-12 d-flex flex-wrap gap-3 justify-content-end">
                                 <button type="button" class="btn btn-primary" id="customer-save">Save</button>
-                                <button type="button" class="btn btn-primary">Update</button>
-                                <button type="button" class="btn btn-primary">Delete</button>
+                                <button type="button" class="btn btn-primary" id="customer-update">Update</button>
+                                <button type="button" class="btn btn-primary" id="customer-delete">Delete</button>
                                 <button type="button" class="btn btn-primary" id="customer-reset">reset</button>
                             </div>
                         </form>

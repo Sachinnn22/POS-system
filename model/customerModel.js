@@ -1,5 +1,6 @@
 export default class customerModel {
-  constructor(cusName,age,contact,address) {
+  constructor(cusId,cusName,age,contact,address) {
+      this.cusId = cusId;
       this.cusName = cusName;
       this.age = age;
       this.contact = contact;
