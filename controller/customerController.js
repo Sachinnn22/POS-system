@@ -1,6 +1,5 @@
 import { customer_db } from "../db/db.js";
 import CustomerModel from "../model/customerModel.js";
-import customerModel from "../model/customerModel.js";
 
 let contactPattern = /^0\d{9}$/;
 let addressPattern =/^[a-zA-Z0-9\s,.'-]{5,100}$/
