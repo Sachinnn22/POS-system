@@ -28,10 +28,9 @@
 
 .buy-now:hover{
     background-color: black;
-    transform: scale(1.1);
-    transition:1000ms ;
 }
 
 .homeImg{
     width: 450px;
 }
+

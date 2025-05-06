@@ -22,30 +22,29 @@
         </button>
 
         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav gap-4"> <!-- gap between nav links -->
+            <ul class="navbar-nav gap-4"> <!-- Bootstrap spacing -->
                 <li class="nav-item">
-                    <a class="nav-link active text-white" href="#"><i class="fas fa-home me-1"></i>Home</a>
+                    <a class="nav-link active text-white" id="home-nav" href="#"><i class="fas fa-home me-1"></i>Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#"><i class="fas fa-box-open me-1"></i>Product</a>
+                    <a class="nav-link text-white" id="product-nav" href="#"><i class="fas fa-box-open me-1"></i>Product</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#"><i class="fas fa-users me-1"></i>Customer</a>
+                    <a class="nav-link text-white" id="customer-nav" href="#"><i class="fas fa-users me-1"></i>Customer</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#"><i class="fas fa-shopping-cart me-1"></i>Order</a>
+                    <a class="nav-link text-white" id="order-nav" href="#"><i class="fas fa-shopping-cart me-1"></i>Order</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#"><i class="fas fa-chart-line me-1"></i>Sales</a>
+                    <a class="nav-link text-white" id="sales-nav" href="#"><i class="fas fa-chart-line me-1"></i>Sales</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#"><i class="fas fa-circle-info me-1"></i>About Us</a>
+                    <a class="nav-link text-white" id="about-nav" href="#"><i class="fas fa-circle-info me-1"></i>About Us</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
-
 
 
 <section id="home-content">
@@ -61,22 +60,23 @@
                 </div>
             </div>
             <div class="col-md-6 d-flex justify-content-center homeImg">
-                <img src="assests/images/cn-11134207-7r98o-lqehq537kvmgd1-removebg-preview.png" class="img-fluid" alt="Watch">
+                <img src="assests/images/images%20(6).jpg" class="img-fluid" alt="Watch" width="235px">
             </div>
         </div>
     </div>
 </section>
 
-<section id="product-content" style="display: none;">
-    <div class="container mt-5">
-        <div class="mb-4 text-center">
-            <h2 class="fw-bold text-primary">Product Section</h2>
-            <p class="text-muted mb-0">Fill the form to add or manage products, and view them in the table</p>
+<section id="product-content" class="py-5" style="display: none;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-primary">Product Management</h2>
+            <p class="text-muted">Add, update, delete, or view products easily.</p>
         </div>
-        <div class="row">
-            <div class="col-lg-6 d-flex flex-wrap gap-5 justify-content-center">
-                <div class="card p-4 shadow-sm h-100 w-100">
-                    <h4 class="mb-4">Product Entry Form</h4>
+        <div class="row g-4">
+            <!-- Product Entry Form -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-lg p-4">
+                    <h4 class="mb-4 text-dark">Product Entry Form</h4>
                     <form class="row g-3">
                         <div class="col-md-6">
                             <input type="text" class="form-control" placeholder="Item ID" id="itemId" disabled>
@@ -94,35 +94,41 @@
                             <input type="number" class="form-control" placeholder="Unit Price" id="price">
                         </div>
                         <div class="col-12 d-flex flex-wrap gap-3 justify-content-end">
-                            <button type="button" class="btn btn-primary" id="item-save">Save</button>
-                            <button type="button" class="btn btn-primary" id="item-update">Update</button>
-                            <button type="button" class="btn btn-primary" id="item-delete">Delete</button>
-                            <button type="button" class="btn btn-primary" id="item-reset">Reset</button>
+                            <button type="button" class="btn btn-success px-4 py-2" id="item-save">Save</button>
+                            <button type="button" class="btn btn-primary px-4 py-2" id="item-update">Update</button>
+                            <button type="button" class="btn btn-danger px-4 py-2" id="item-delete">Delete</button>
+                            <button type="button" class="btn btn-secondary px-4 py-2" id="item-reset">Reset</button>
                         </div>
                     </form>
                 </div>
             </div>
+
+            <!-- Product Table -->
             <div class="col-lg-6">
-                <div class="card p-3 shadow-sm h-100">
-                    <h5 class="mb-3">Product Table</h5>
-                    <table class="table table-bordered table-striped align-middle mb-0">
-                        <thead class="table-light">
-                        <tr>
-                            <th scope="col">Item ID</th>
-                            <th scope="col">Item Name</th>
-                            <th scope="col">Qty</th>
-                            <th scope="col">Brand</th>
-                            <th scope="col">Unit Price</th>
-                        </tr>
-                        </thead>
-                        <tbody id="item-tbody">
-                        </tbody>
-                    </table>
+                <div class="card border-0 shadow-lg p-3">
+                    <h5 class="mb-3 text-dark">Product List</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Item ID</th>
+                                <th>Item Name</th>
+                                <th>Qty</th>
+                                <th>Brand</th>
+                                <th>Unit Price</th>
+                            </tr>
+                            </thead>
+                            <tbody id="item-tbody">
+                            <!-- Product rows go here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
 
 
     <section id="customer-content">

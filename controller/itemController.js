@@ -109,3 +109,40 @@ $("#item-update").click(function () {
     });
 })
 
+$("#item-delete").click(function () {
+    let itemId = $("#itemId").val();
+    let itemName = $("#itemName").val();
+    let qty = $("#qty").val();
+    let brand = $("#brand").val();
+    let price = $("#price").val();
+
+    if (itemName === '' || qty ===''|| brand ===''|| price ===''){
+        Swal.fire({
+            title: 'Error!',
+            text: 'Invalid Inputs',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+        });
+        return;
+    }
+
+    let index = item_db.findIndex(item => item.itemId == itemId );
+
+    if (index === -1) {
+        Swal.fire({
+            title: "Error",
+            text: "Customer not found to delete",
+            icon: "error"
+        });
+        return;
+    }
+
+    item_db.splice(index,1)
+    loadItems();
+    clear()
+
+    Swal.fire({
+        title: "delete success !",
+        icon: "success"
+    });
+})
