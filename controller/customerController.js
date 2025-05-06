@@ -133,7 +133,7 @@ $('#customer-delete').on('click', function () {
         return;
     }
 
-    let index = customer_db.findIndex(customer => customer.cusId === cusId);
+    let index = customer_db.findIndex(customer => customer.cusId === Number(cusId));
 
     if (index === -1) {
         Swal.fire({
@@ -214,7 +214,7 @@ $('#customer-update').on('click', function () {
         return
     }
 
-    let index = customer_db.findIndex(customer => customer.cusId == cusId);
+    let index = customer_db.findIndex(customer => customer.cusId == Number(cusId));
 
     if (index === -1) {
         Swal.fire({
