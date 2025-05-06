@@ -2,6 +2,11 @@ import {customer_db, item_db} from "../db/db.js";
 import itemModel from "../model/itemModel.js";
 
 
+let productNameRegex = /([A-Za-z\s]+(?:Watch|Model)?)/;
+let qtyRegex = /(\d+)\s*(?:qty|pcs|units?)/i;
+let brandRegex = /\b(Brand|Manufacturer)\s*[:\-]?\s*([A-Za-z\s]+)/i;
+let priceRegex = /\$\s*(\d+(?:,\d{3})*(?:\.\d{2})?)/;
+
 export function loadItems() {
     $("#item-tbody").empty();
     item_db.map((item) => {
@@ -39,6 +44,46 @@ $("#item-save").click(function () {
         Swal.fire({
             title: 'Error!',
             text: 'Invalid Inputs',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+        });
+        return;
+    }
+
+    if (!productNameRegex.test(itemName)){
+        Swal.fire({
+            title: 'Error!',
+            text: 'item name not correct',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+        });
+        return;
+    }
+
+    if (!qtyRegex.test(qty)){
+        Swal.fire({
+            title: 'Error!',
+            text: 'qty not correct',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+        });
+        return;
+    }
+
+    if (!brandRegex.test(brand)){
+        Swal.fire({
+            title: 'Error!',
+            text: 'brand not correct',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+        });
+        return;
+    }
+
+    if (!priceRegex.test(price)){
+        Swal.fire({
+            title: 'Error!',
+            text: 'price not correct',
             icon: 'error',
             confirmButtonText: 'Ok'
         });
