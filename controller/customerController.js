@@ -6,12 +6,18 @@ let addressPattern =/^[a-zA-Z0-9\s,.'-]{5,100}$/
 let namePattern =/^[A-Za-z\s]{3,40}$/
 let agePattern =/^(1[01][0-9]|120|[1-9][0-9]?)$/
 
+
+$(document).ready(function () {
+    loadCustomer();
+    clear();
+});
+
 export function loadCustomer() {
     $("#customer-tbody").empty();
-    customer_db.forEach((item) => {
+    customer_db.map((item) => {
         let data = `<tr>
             <td>${item.cusId}</td>
-            <td>${item.cusName}</td>
+            <td>${item.cusName}</td>-
             <td>${item.age}</td>
             <td>${item.contact}</td>
             <td>${item.address}</td>         
@@ -21,11 +27,16 @@ export function loadCustomer() {
 }
 
 function nextId() {
-    return 1000 + customer_db.length + 1;
+    if (customer_db.length==0) return 1001;
+    let customerDbElement = customer_db[customer_db.length-1];
+    console.log(customerDbElement)
+    let lastId = customerDbElement.cusId;
+    let newId = lastId+1;
+    return newId;
 }
 
 export function clear() {
-    $("#cusId").val('');
+    $("#cusId").val(nextId());
     $('#cusName').val('');
     $('#age').val('');
     $('#contact').val('');
@@ -35,10 +46,10 @@ export function clear() {
 $("#customer-save").click(function () {
 
     let cusId = nextId();
-    let cusName = $("#cusName").val().trim();
-    let age = $("#age").val().trim();
-    let contact = $("#contact").val().trim();
-    let address = $("#address").val().trim();
+    let cusName = $("#cusName").val()
+    let age = $("#age").val()
+    let contact = $("#contact").val()
+    let address = $("#address").val()
 
     if (!contactPattern.test(contact)) {
         Swal.fire({
@@ -118,13 +129,13 @@ $('#customer-reset').on('click', function () {
 });
 
 $('#customer-delete').on('click', function () {
-    let cusId = $('#cusId').val().trim();
-    let cusName = $('#cusName').val().trim();
-    let age = $('#age').val().trim();
-    let contact = $('#contact').val().trim();
-    let address = $('#address').val().trim();
+    let cusId = $('#cusId').val()
+    let cusName = $('#cusName').val()
+    let age = $('#age').val()
+    let contact = $('#contact').val()
+    let address = $('#address').val()
 
-    if (cusId === '' || cusName === '' || age === '' || contact === '' || address === '') {
+    if (cusName === '' || age === '' || contact === '' || address === '') {
         Swal.fire({
             title: "Error",
             text: "Fill the fields first",
@@ -133,37 +144,32 @@ $('#customer-delete').on('click', function () {
         return;
     }
 
-    let index = customer_db.findIndex(customer => customer.cusId === Number(cusId));
-
-    if (index === -1) {
-        Swal.fire({
-            title: "Error",
-            text: "Customer not found to delete",
-            icon: "error"
-        });
-        return;
-    }
-
-    customer_db.splice(index, 1);
-    loadCustomer();
+    let index = customer_db.findIndex(customer => customer.cusId == Number(cusId));
 
     Swal.fire({
-        title: "Deleted!",
-        text: "Customer Deleted Successfully!",
-        icon: "success"
-    });
+        title: 'Are you sure?',
+        text: 'This customer will be removed!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(result => {
 
-    clear();
+        if (result.isConfirmed) {
+            customer_db.splice(index, 1);
+            loadCustomer();
+            clear();
+        }
+    });
 });
 
 $('#customer-update').on('click', function () {
     let contactPattern = /^0\d{9}$/;
 
-    let cusId = $('#cusId').val().trim();
-    let cusName = $('#cusName').val().trim();
-    let age = $('#age').val().trim();
-    let contact = $('#contact').val().trim();
-    let address = $('#address').val().trim();
+    let cusId = $('#cusId').val()
+    let cusName = $('#cusName').val();
+    let age = $('#age').val();
+    let contact = $('#contact').val();
+    let address = $('#address').val();
 
     if (!contactPattern.test(contact)) {
         Swal.fire({

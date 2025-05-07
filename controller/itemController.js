@@ -7,6 +7,12 @@ let brandRegex = /^[A-Za-z0-9\s\-&'.]+$/;
 let priceRegex = /^\d+(\.\d{2})?$/;
 
 
+$(document).ready(function () {
+    loadItems();
+    clear();
+});
+
+
 export function loadItems() {
     $("#item-tbody").empty();
     item_db.map((item) => {
@@ -18,15 +24,21 @@ export function loadItems() {
             <td>${item.price}</td>         
         </tr>`;
         $("#item-tbody").append(data);
+
     });
 }
 
 function nextId() {
-    return 2000 + item_db.length + 1;
+    if (item_db.length==0) return 2001;
+    let itemDbElement = item_db[item_db.length-1];
+    let lastId = itemDbElement.itemId;
+    let newId = lastId+1;
+    return newId;
 }
 
+
 export function clear() {
-    $("#itemId").val("");
+    $("#itemId").val(nextId());
     $("#itemName").val("");
     $("#qty").val("");
     $("#brand").val("");
@@ -222,12 +234,18 @@ $("#item-delete").click(function () {
         return;
     }
 
-    item_db.splice(index, 1);
-    loadItems();
-    clear();
-
     Swal.fire({
-        title: "delete success!",
-        icon: "success"
+        title: 'Are you sure?',
+        text: 'This customer will be removed!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then(result => {
+
+        if (result.isConfirmed) {
+            item_db.splice(index, 1);
+            loadItems();
+            clear();
+        }
     });
 });

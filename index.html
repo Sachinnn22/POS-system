@@ -78,7 +78,7 @@
                     <h4 class="mb-4 text-dark">Product Entry Form</h4>
                     <form class="row g-3">
                         <div class="col-md-6">
-                            <input type="text" class="form-control" placeholder="Item ID" id="itemId" disabled>
+                            <input type="text" class="form-control" placeholder="Item ID" id="itemId" readonly>
                         </div>
                         <div class="col-md-6">
                             <input type="text" class="form-control" placeholder="Item Name" id="itemName">
@@ -140,7 +140,7 @@
                     <h4 class="mb-4 text-dark">Customer Entry Form</h4>
                     <form class="row g-3">
                         <div class="col-md-6">
-                            <input type="text" class="form-control" placeholder="Customer Id" id="cusId" disabled>
+                            <input type="text" class="form-control" placeholder="Customer Id" id="cusId" readonly>
                         </div>
                         <div class="col-md-6">
                             <input type="text" class="form-control" placeholder="Customer Name" id="cusName">
@@ -365,13 +365,14 @@
 
 <script>
 
-        $("#home-nav").click(function () {
+    $("#home-nav").click(function () {
+            $("#home-content").show();
             $("#product-content").hide();
             $("#customer-content").hide();
             $("#sales-content").hide();
             $("#order-content").hide();
             $("#about-content").hide();
-            $("#home-content").show();
+
         });
 
         $("#product-nav").click(function () {
