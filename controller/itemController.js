@@ -36,6 +36,21 @@ function nextId() {
     return newId;
 }
 
+$("#search-input").on("input", function () {
+    var text = $(this).val();
+
+    $("#item-table tr").each(function () {
+        var search = $(this).text();
+
+        if (search.includes(text)) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+});
+
+
 
 export function clear() {
     $("#itemId").val(nextId());

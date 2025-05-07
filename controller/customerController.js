@@ -138,7 +138,7 @@ $('#customer-delete').on('click', function () {
     if (cusName === '' || age === '' || contact === '' || address === '') {
         Swal.fire({
             title: "Error",
-            text: "Fill the fields first",
+            text: "Select customer",
             icon: "error"
         });
         return;
@@ -160,6 +160,7 @@ $('#customer-delete').on('click', function () {
             clear();
         }
     });
+
 });
 
 $('#customer-update').on('click', function () {
