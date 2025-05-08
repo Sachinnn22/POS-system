@@ -12,6 +12,20 @@ $(document).ready(function () {
     clear();
 });
 
+$("#search-customer").on("input",function () {
+    let text = $(this).val()
+
+    $("#table-customer tr").each(function () {
+        let search = $(this).text()
+
+        if (search.includes(text)){
+            $(this).show()
+        }else {
+            $(this).hide()
+        }
+    })
+})
+
 export function loadCustomer() {
     $("#customer-tbody").empty();
     customer_db.map((item) => {

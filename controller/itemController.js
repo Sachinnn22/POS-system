@@ -36,7 +36,7 @@ function nextId() {
     return newId;
 }
 
-$("#search-input").on("input", function () {
+$("#search-item").on("input", function () {
     var text = $(this).val();
 
     $("#item-table tr").each(function () {
@@ -49,8 +49,6 @@ $("#search-input").on("input", function () {
         }
     });
 });
-
-
 
 export function clear() {
     $("#itemId").val(nextId());
