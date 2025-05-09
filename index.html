@@ -225,7 +225,7 @@
                                 <input type="number" class="form-control" placeholder="Qty on Hand" id="order-qty">
                             </div>
                             <div class="col-12 d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary w-100">Add to Cart</button>
+                                <button type="button" class="btn btn-primary w-100" id="add-cart">Add to Cart</button>
                             </div>
                         </form>
                     </div>
@@ -283,13 +283,13 @@
                                 <thead class="table-light">
                                 <tr>
                                     <th style="width: 20%;">Order ID</th>
-                                    <th style="width: 20%;">Customer</th>
                                     <th style="width: 20%;">Product</th>
                                     <th style="width: 20%;">qty</th>
                                     <th style="width: 20%;">Amount</th>
+                                    <th style="width: 20%;">Date</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="order-table">
                                 </tbody>
                             </table>
                         </div>

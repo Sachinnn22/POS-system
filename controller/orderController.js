@@ -65,3 +65,31 @@ function updateBalance() {
     $('#item-price').val(discountedTotal.toFixed(2));
     $('#balance').val(balance.toFixed(2));
 }
+
+$('#add-cart').click(function () {
+    alert("hey")
+    let orderId = $('#order-id').val();
+    let itemId = $('#item-dropdown').val();
+    let qty = +$('#order-qty').val() || 1;
+    let amount = +$('#item-price').val() || 0;
+    let date = new Date().toLocaleDateString();
+
+    console.log({ orderId, itemId, qty, amount });
+
+    if (!itemId || qty <= 0 || amount <= 0) {
+        alert("Invalid input. Check item, qty, and amount.");
+        return;
+    }
+
+    $('#order-table tbody').append(`
+        <tr>
+            <td>${orderId}</td>
+            <td>${itemId}</td>
+            <td>${qty}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${date}</td>
+        </tr>
+    `);
+
+
+});

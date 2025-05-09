@@ -75,7 +75,6 @@ function loadCustomerIds() {
     });
 }
 
-
 $("#customer-save").click(function () {
 
     let cusId = nextId();
