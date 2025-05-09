@@ -1,4 +1,5 @@
 import { customer_db, item_db, order_db } from "../db/db.js";
+import { loadItems } from './itemController.js';
 
 let cart_db = [];
 
@@ -78,6 +79,17 @@ $('#add-cart').click(function () {
     let amount = Number($('#item-price').val()) || 0;
     let date = new Date().toLocaleDateString();
 
+    let item = item_db.find(i => i.itemId.toString() === itemId);
+    if (!item || item.qty < qty) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Not enough Stock',
+        });
+        return;
+    }
+
+    item.qty -= qty;
+
     if (!orderId || !itemId || !qty || !amount) {
         Swal.fire({
             icon: 'warning',
@@ -111,4 +123,19 @@ $('#add-cart').click(function () {
         title: 'Added to Cart',
     });
     clear();
+    loadItems()
 });
+
+$("#search-order").on("input",function () {
+    let text = $(this).val()
+
+   $("#order-table tr").each(function () {
+       let search = $(this).text()
+
+       if (search.includes(text)){
+           $(this).show()
+       }else {
+           $(this).hide()
+       }
+   })
+})

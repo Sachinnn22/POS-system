@@ -127,15 +127,6 @@ $("#customer-save").click(function () {
         return;
     }
 
-    if (customer_db.some(c => c.cusId == cusId)) {
-        Swal.fire({
-            title: "Error!",
-            text: "Customer ID already exists!",
-            icon: "error"
-        });
-        return;
-    }
-
     let customer_data = new CustomerModel(cusId, cusName, age, contact, address);
     customer_db.push(customer_data);
     loadCustomerIds()

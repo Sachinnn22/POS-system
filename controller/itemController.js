@@ -56,7 +56,7 @@ function loadItemsId() {
     item_db.forEach(item => {
         $('#item-dropdown').append(
             $('<option>', {
-                value: item.itemsId,
+                value: item.itemId,
                 text: item.itemId
             })
         );
