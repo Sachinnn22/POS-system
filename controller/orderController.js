@@ -1,9 +1,9 @@
 import { customer_db, item_db, order_db } from "../db/db.js";
 
+let cart_db = [];
+
 $(document).ready(function () {
-    clearFields();
-    $('#order-qty').on('input', updateBalance);
-    $('#cash, #discount').on('input', updateBalance);
+    clear();
 });
 
 function nextOrderId() {
@@ -12,7 +12,7 @@ function nextOrderId() {
     return lastOrder + 1;
 }
 
-export function clearFields() {
+function clear() {
     $("#order-id").val(nextOrderId());
     $('#item-price').val('');
     $('#cash').val('');
@@ -20,6 +20,7 @@ export function clearFields() {
     $('#balance').val('');
     $('#order-qty').val(1);
     $('#total-amount').val('');
+    $('#item-dropdown').prop('selectedIndex', 0);
 }
 
 $('#customer-dropdown').change(function () {
@@ -45,11 +46,15 @@ $('#item-dropdown, #order-qty, #cash, #discount').on('input change', updateBalan
 function updateBalance() {
     let itemId = $('#item-dropdown').val();
     let item = item_db.find(i => i.itemId.toString() === itemId);
-    let price = item ? +item.price : 0;
+    let price = 0;
 
-    let qty = +$('#order-qty').val() || 1;
-    let cash = +$('#cash').val() || 0;
-    let discount = +$('#discount').val() || 0;
+    if (item !== null) {
+        price = Number(item.price);
+    }
+
+    let qty = Number($('#order-qty').val()) || 1;
+    let cash = Number($('#cash').val()) || 0;
+    let discount = Number($('#discount').val()) || 0;
 
     if (qty <= 0) {
         $('#item-price').val('');
@@ -67,19 +72,29 @@ function updateBalance() {
 }
 
 $('#add-cart').click(function () {
-    alert("hey")
     let orderId = $('#order-id').val();
     let itemId = $('#item-dropdown').val();
-    let qty = +$('#order-qty').val() || 1;
-    let amount = +$('#item-price').val() || 0;
+    let qty = Number($('#order-qty').val()) || 1;
+    let amount = Number($('#item-price').val()) || 0;
     let date = new Date().toLocaleDateString();
 
-    console.log({ orderId, itemId, qty, amount });
-
-    if (!itemId || qty <= 0 || amount <= 0) {
-        alert("Invalid input. Check item, qty, and amount.");
+    if (!orderId || !itemId || !qty || !amount) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Fields are empty',
+        });
         return;
     }
+
+    if (qty <= 0 || amount <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Input',
+        });
+        return;
+    }
+
+    cart_db.push({ orderId: orderId, itemId: itemId, qty: qty, amount: amount, date: date });
 
     $('#order-table tbody').append(`
         <tr>
@@ -91,5 +106,9 @@ $('#add-cart').click(function () {
         </tr>
     `);
 
-
+    Swal.fire({
+        icon: 'success',
+        title: 'Added to Cart',
+    });
+    clear();
 });

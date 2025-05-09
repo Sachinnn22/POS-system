@@ -6,9 +6,7 @@ let addressPattern =/^[a-zA-Z0-9\s,.'-]{5,100}$/
 let namePattern =/^[A-Za-z\s]{3,40}$/
 let agePattern =/^(1[01][0-9]|120|[1-9][0-9]?)$/
 
-
 $(document).ready(function () {
-
     clear();
 });
 
@@ -41,12 +39,9 @@ function loadCustomer() {
 }
 
 function nextId() {
-    if (customer_db.length==0) return 1001;
-    let customerDbElement = customer_db[customer_db.length-1];
-    console.log(customerDbElement)
-    let lastId = customerDbElement.cusId;
-    let newId = lastId+1;
-    return newId;
+    if (customer_db.length === 0) return 1001;
+    let lastCustomer = customer_db[customer_db.length - 1].customerId;
+    return lastCustomer + 1;
 }
 
 export function clear() {
@@ -64,7 +59,7 @@ function loadCustomerIds() {
         value: '',
         text: 'Select Customer ID'
     }));
-    console.log(customer_db); // Check the content of customer_db
+    console.log(customer_db);
     customer_db.forEach(customer => {
         $('#customer-dropdown').append(
             $('<option>', {
@@ -76,7 +71,6 @@ function loadCustomerIds() {
 }
 
 $("#customer-save").click(function () {
-
     let cusId = nextId();
     let cusName = $("#cusName").val()
     let age = $("#age").val()

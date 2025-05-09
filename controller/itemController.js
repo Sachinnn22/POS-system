@@ -6,13 +6,11 @@ let qtyRegex = /^([1-9][0-9]*|0)(\.[0-9]+)?$/;
 let brandRegex = /^[A-Za-z0-9\s\-&'.]+$/;
 let priceRegex = /^\d+(\.\d{2})?$/;
 
-
 $(document).ready(function () {
     loadItemsId()
     loadItems();
     clear();
 });
-
 
 export function loadItems() {
     $("#item-tbody").empty();
@@ -30,18 +28,16 @@ export function loadItems() {
 }
 
 function nextId() {
-    if (item_db.length==0) return 2001;
-    let itemDbElement = item_db[item_db.length-1];
-    let lastId = itemDbElement.itemId;
-    let newId = lastId+1;
-    return newId;
+    if (item_db.length === 0) return 2001;
+    let lastItem = item_db[item_db.length - 1].itemId;
+    return lastItem + 1;
 }
 
 $("#search-item").on("input", function () {
-    var text = $(this).val();
+    let text = $(this).val();
 
     $("#item-table tr").each(function () {
-        var search = $(this).text();
+        let search = $(this).text();
 
         if (search.includes(text)) {
             $(this).show();
