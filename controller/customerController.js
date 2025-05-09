@@ -8,7 +8,7 @@ let agePattern =/^(1[01][0-9]|120|[1-9][0-9]?)$/
 
 
 $(document).ready(function () {
-    loadCustomer();
+
     clear();
 });
 
@@ -26,7 +26,7 @@ $("#search-customer").on("input",function () {
     })
 })
 
-export function loadCustomer() {
+function loadCustomer() {
     $("#customer-tbody").empty();
     customer_db.map((item) => {
         let data = `<tr>
@@ -56,6 +56,25 @@ export function clear() {
     $('#contact').val('');
     $('#address').val('');
 }
+
+function loadCustomerIds() {
+    console.log('Loading customer IDs...');
+    $('#customer-dropdown').empty();
+    $('#customer-dropdown').append($('<option>', {
+        value: '',
+        text: 'Select Customer ID'
+    }));
+    console.log(customer_db); // Check the content of customer_db
+    customer_db.forEach(customer => {
+        $('#customer-dropdown').append(
+            $('<option>', {
+                value: customer.cusId,
+                text: customer.cusId
+            })
+        );
+    });
+}
+
 
 $("#customer-save").click(function () {
 
@@ -126,6 +145,7 @@ $("#customer-save").click(function () {
 
     let customer_data = new CustomerModel(cusId, cusName, age, contact, address);
     customer_db.push(customer_data);
+    loadCustomerIds()
     loadCustomer();
 
     Swal.fire({

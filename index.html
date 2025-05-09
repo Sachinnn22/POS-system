@@ -218,14 +218,11 @@
                                 </select>
                             </div>
                             <div class="col-12">
-                                <select class="form-select">
-                                    <option selected>Use Product</option>
-                                    <option value="1">Product A</option>
-                                    <option value="2">Product B</option>
+                                <select class="form-select" id="item-dropdown">
                                 </select>
                             </div>
                             <div class="col-12">
-                                <input type="number" class="form-control" placeholder="Qty on Hand">
+                                <input type="number" class="form-control" placeholder="Qty on Hand" id="order-qty">
                             </div>
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="button" class="btn btn-primary w-100">Add to Cart</button>
@@ -245,26 +242,26 @@
                             <div class="col-12">
                                 <div class="input-group">
                                     <span class="input-group-text">Amount</span>
-                                    <input type="number" class="form-control" placeholder="0.00">
+                                    <input type="number" class="form-control" placeholder="0.00" id="item-price" readonly>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="input-group">
                                     <span class="input-group-text">Discount</span>
-                                    <input type="number" class="form-control" placeholder="0">
+                                    <input type="number" class="form-control" placeholder="0" id="discount">
                                     <span class="input-group-text">%</span>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="input-group">
                                     <span class="input-group-text">Cash</span>
-                                    <input type="number" class="form-control" placeholder="0.00">
+                                    <input type="number" class="form-control" placeholder="0.00" id="cash">
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="input-group">
                                     <span class="input-group-text">Balance</span>
-                                    <input type="number" class="form-control" placeholder="0.00" readonly>
+                                    <input type="number" class="form-control" placeholder="0.00" id="balance" readonly>
                                 </div>
                             </div>
                             <div class="col-12 d-flex justify-content-end">

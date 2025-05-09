@@ -8,6 +8,7 @@ let priceRegex = /^\d+(\.\d{2})?$/;
 
 
 $(document).ready(function () {
+    loadItemsId()
     loadItems();
     clear();
 });
@@ -49,6 +50,22 @@ $("#search-item").on("input", function () {
         }
     });
 });
+
+function loadItemsId() {
+    $('#item-dropdown').empty();
+    $('#item-dropdown').append($('<option>', {
+        value: '',
+        text: 'Select item ID'
+    }));
+    item_db.forEach(item => {
+        $('#item-dropdown').append(
+            $('<option>', {
+                value: item.itemsId,
+                text: item.itemId
+            })
+        );
+    });
+}
 
 export function clear() {
     $("#itemId").val(nextId());
@@ -118,6 +135,7 @@ $("#item-save").click(function () {
     let itemData = new itemModel(itemId, itemName, qty, brand, price);
     item_db.push(itemData);
     loadItems();
+    loadItemsId()
     clear();
 
     Swal.fire({
