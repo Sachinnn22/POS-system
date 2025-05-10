@@ -1,10 +1,11 @@
 import { customer_db, item_db, order_db } from "../db/db.js";
-import { loadItems } from './itemController.js';
+import { loadItems, loadItemsId } from './itemController.js';
 
 let cart_db = [];
 
 $(document).ready(function () {
     clear();
+    loadItemsId()
 });
 
 function nextOrderId() {
@@ -19,7 +20,7 @@ function clear() {
     $('#cash').val('');
     $('#discount').val('');
     $('#balance').val('');
-    $('#order-qty').val(1);
+    $('#order-qty').val('');
     $('#total-amount').val('');
     $('#item-dropdown').prop('selectedIndex', 0);
 }
@@ -37,6 +38,7 @@ $('#item-dropdown').change(function () {
     item_db.map(function (item) {
         if (itemId.toString() === item.itemId.toString()) {
             $('#item-price').val(item.price);
+            $('#order-qty').val(item.qty);
             updateBalance();
         }
     });
@@ -53,11 +55,17 @@ function updateBalance() {
         price = Number(item.price);
     }
 
-    let qty = Number($('#order-qty').val()) || 1;
+    let qtyInput = $('#order-qty').val();
+    let qty = 0;
+
+    if (qtyInput !== '') {
+        qty = Number(qtyInput);
+    }
+
     let cash = Number($('#cash').val()) || 0;
     let discount = Number($('#discount').val()) || 0;
 
-    if (qty <= 0) {
+    if (qty <= 0 || isNaN(qty)) {
         $('#item-price').val('');
         $('#balance').val('');
         return;
@@ -75,7 +83,13 @@ function updateBalance() {
 $('#add-cart').click(function () {
     let orderId = $('#order-id').val();
     let itemId = $('#item-dropdown').val();
-    let qty = Number($('#order-qty').val()) || 1;
+    let qtyInput = $('#order-qty').val();
+    let qty = 0;
+
+    if (qtyInput !== '') {
+        qty = Number(qtyInput);
+    }
+
     let amount = Number($('#item-price').val()) || 0;
     let date = new Date().toLocaleDateString();
 
@@ -126,16 +140,16 @@ $('#add-cart').click(function () {
     loadItems()
 });
 
-$("#search-order").on("input",function () {
-    let text = $(this).val()
+$("#search-order").on("input", function () {
+    let text = $(this).val();
 
-   $("#order-table tr").each(function () {
-       let search = $(this).text()
+    $("#order-table tr").each(function () {
+        let search = $(this).text();
 
-       if (search.includes(text)){
-           $(this).show()
-       }else {
-           $(this).hide()
-       }
-   })
-})
+        if (search.includes(text)) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+});

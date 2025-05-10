@@ -47,7 +47,7 @@ $("#search-item").on("input", function () {
     });
 });
 
-function loadItemsId() {
+export function loadItemsId() {
     $('#item-dropdown').empty();
     $('#item-dropdown').append($('<option>', {
         value: '',
@@ -273,6 +273,7 @@ $("#item-delete").click(function () {
             item_db.splice(index, 1);
             loadItems();
             clear();
+            loadItemsId()
         }
     });
 });

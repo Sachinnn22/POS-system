@@ -1,4 +1,4 @@
-import { customer_db } from "../db/db.js";
+import {customer_db, item_db} from "../db/db.js";
 import CustomerModel from "../model/customerModel.js";
 
 let contactPattern = /^0\d{9}$/;
@@ -40,8 +40,8 @@ function loadCustomer() {
 
 function nextId() {
     if (customer_db.length === 0) return 1001;
-    let lastCustomer = customer_db[customer_db.length - 1].customerId;
-    return lastCustomer + 1;
+    let lastItem = customer_db[customer_db.length - 1].cusId;
+    return lastItem + 1;
 }
 
 export function clear() {
@@ -176,6 +176,8 @@ $('#customer-delete').on('click', function () {
             customer_db.splice(index, 1);
             loadCustomer();
             clear();
+            loadCustomerIds()
+
         }
     });
 
