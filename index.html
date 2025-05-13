@@ -216,10 +216,16 @@
                             </div>
                             <div class="col-12">
                                 <select class="form-select" id="customer-dropdown">
+                                    <option selected disabled>Select Customer</option>
+                                    <option>John Doe</option>
+                                    <option>Jane Smith</option>
                                 </select>
                             </div>
                             <div class="col-12">
                                 <select class="form-select" id="item-dropdown">
+                                    <option selected disabled>Select Product</option>
+                                    <option value="1000">Watch A</option>
+                                    <option value="1500">Watch B</option>
                                 </select>
                             </div>
                             <div class="col-12">
@@ -266,7 +272,7 @@
                                 </div>
                             </div>
                             <div class="col-12 d-flex justify-content-end">
-                                <button type="button" class="btn btn-success w-100">Process</button>
+                                <button type="button" class="btn btn-success w-100" id="process-btn">Process</button>
                             </div>
                         </form>
                     </div>
@@ -284,11 +290,11 @@
                             <table class="table table-bordered table-hover mb-0 w-100" id="order-table">
                                 <thead class="table-light">
                                 <tr>
-                                    <th style="width: 20%;">Order ID</th>
                                     <th style="width: 20%;">Product</th>
                                     <th style="width: 20%;">Qty</th>
                                     <th style="width: 20%;">Amount</th>
                                     <th style="width: 20%;">Date</th>
+                                    <th style="width: 20%;">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody id="order-tbody">
@@ -301,6 +307,7 @@
         </div>
     </div>
 </section>
+
 
 <section id="sales-content">
     <div class="container mt-5">
@@ -385,62 +392,62 @@
         $("#about-content").hide();
         $("#home-content").show();
 
-        });
+    });
 
-        $("#product-nav").click(function () {
-            $("#home-content").hide();
-            $("#customer-content").hide();
-            $("#about-content").hide();
-            $("#order-content").hide();
-            $("#sales-content").hide();
-            $("#product-content").show();
-        });
+    $("#product-nav").click(function () {
+        $("#home-content").hide();
+        $("#customer-content").hide();
+        $("#about-content").hide();
+        $("#order-content").hide();
+        $("#sales-content").hide();
+        $("#product-content").show();
+    });
 
-        $("#customer-nav").click(function () {
-            $("#home-content").hide();
-            $("#product-content").hide();
-            $("#about-content").hide();
-            $("#order-content").hide();
-            $("#sales-content").hide();
-            $("#customer-content").show();
-        });
+    $("#customer-nav").click(function () {
+        $("#home-content").hide();
+        $("#product-content").hide();
+        $("#about-content").hide();
+        $("#order-content").hide();
+        $("#sales-content").hide();
+        $("#customer-content").show();
+    });
 
-        $("#order-nav").click(function () {
-            $("#home-content").hide();
-            $("#product-content").hide();
-            $("#about-content").hide();
-            $("#sales-content").hide();
-            $("#customer-content").hide();
-            $("#order-content").show();
-        });
+    $("#order-nav").click(function () {
+        $("#home-content").hide();
+        $("#product-content").hide();
+        $("#about-content").hide();
+        $("#sales-content").hide();
+        $("#customer-content").hide();
+        $("#order-content").show();
+    });
 
 
-        $("#sales-nav").click(function () {
-            $("#home-content").hide();
-            $("#product-content").hide();
-            $("#about-content").hide();
-            $("#customer-content").hide();
-            $("#order-content").hide();
-            $("#sales-content").show();
-        });
+    $("#sales-nav").click(function () {
+        $("#home-content").hide();
+        $("#product-content").hide();
+        $("#about-content").hide();
+        $("#customer-content").hide();
+        $("#order-content").hide();
+        $("#sales-content").show();
+    });
 
-        $("#about-nav").click(function () {
-            $("#home-content").hide();
-            $("#product-content").hide();
-            $("#sales-content").hide();
-            $("#customer-content").hide();
-            $("#order-content").hide();
-            $("#about-content").show();
-        });
+    $("#about-nav").click(function () {
+        $("#home-content").hide();
+        $("#product-content").hide();
+        $("#sales-content").hide();
+        $("#customer-content").hide();
+        $("#order-content").hide();
+        $("#about-content").show();
+    });
 
-        $("#buy-now").click(function () {
-            $("#product-content").hide();
-            $("#customer-content").hide();
-            $("#sales-content").hide();
-            $("#home-content").hide();
-            $("#about-content").hide();
-            $("#order-content").show();
-        });
+    $("#buy-now").click(function () {
+        $("#product-content").hide();
+        $("#customer-content").hide();
+        $("#sales-content").hide();
+        $("#home-content").hide();
+        $("#about-content").hide();
+        $("#order-content").show();
+    });
 
 </script>
 
