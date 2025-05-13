@@ -9,11 +9,9 @@ $(document).ready(function () {
 });
 
 function nextOrderId() {
-    if (order_db.length === 0) {
-        return 3001;
-    }
-    let lastOrder = order_db[order_db.length - 1].orderId;
-    return lastOrder + 1;
+    if (order_db.length === 0) return 3001;
+    let lastItem = order_db[order_db.length - 1].orderId;
+    return lastItem + 1;
 }
 
 function clearForm() {
@@ -22,52 +20,33 @@ function clearForm() {
     $('#discount').val('');
     $('#balance').val('');
     $('#order-qty').val('');
+    $('#item-price').val('');
     $('#item-dropdown').prop('selectedIndex', 0);
+    $('#customer-dropdown').prop('selectedIndex', 0);
 }
 
-$('#customer-dropdown').change(function () {
-    let customerId = $(this).val();
-    customer_db.map(function (customer) {
-        if (customerId.toString() === customer.cusId.toString()) {
-        }
-    });
+$('#cash, #discount, #order-qty, #item-dropdown').on('input change', function () {
+    updateBalance();
 });
-
-$('#item-dropdown').change(function () {
-    let itemId = $(this).val();
-    item_db.map(function (item) {
-        if (itemId.toString() === item.itemId.toString()) {
-            $('#order-qty').val('');
-            updateBalance();
-        }
-    });
-});
-
-$('#item-dropdown, #order-qty, #cash, #discount').on('input change', updateBalance);
 
 function updateBalance() {
     let itemId = $('#item-dropdown').val();
     let item = item_db.find(i => i.itemId.toString() === itemId);
-    let price = 0;
+    let price = item ? Number(item.price) : 0;
 
-    if (item) {
-        price = Number(item.price);
-    }
-
-    let qtyInput = $('#order-qty').val();
-    let qty = qtyInput !== '' ? Number(qtyInput) : 0;
+    let qty = Number($('#order-qty').val()) || 0;
     let cash = Number($('#cash').val()) || 0;
     let discount = Number($('#discount').val()) || 0;
 
-    if (qty <= 0 || isNaN(qty)) {
+    if (!item || qty <= 0) {
         $('#balance').val('');
         return;
     }
 
-    let totalPrice = price * qty;
-    let discountAmount = totalPrice * (discount / 100);
-    let discountedTotal = totalPrice - discountAmount;
-    let balance = cash - discountedTotal;
+    let total = price * qty;
+    let discountAmount = total * (discount / 100);
+    let finalAmount = total - discountAmount;
+    let balance = cash - finalAmount;
 
     $('#balance').val(balance.toFixed(2));
 }
@@ -75,34 +54,12 @@ function updateBalance() {
 $('#add-cart').click(function () {
     let orderId = $('#order-id').val();
     let itemId = $('#item-dropdown').val();
-    let qtyInput = $('#order-qty').val();
-    let qty = qtyInput !== '' ? Number(qtyInput) : 0;
+    let qty = Number($('#order-qty').val()) || 0;
     let date = new Date().toLocaleDateString();
 
     let item = item_db.find(i => i.itemId.toString() === itemId);
-    let existingQtyInCart = cart_db.filter(i => i.itemId === itemId).reduce((sum, i) => sum + i.qty, 0);
-
-    if (!item || (item.qty - existingQtyInCart) < qty) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Not enough Stock'
-        });
-        return;
-    }
-
-    if (!orderId || !itemId || !qty) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Fields are empty'
-        });
-        return;
-    }
-
-    if (qty <= 0) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Invalid Input'
-        });
+    if (!item || item.qty < qty || qty <= 0) {
+        Swal.fire({ icon: 'warning', title: 'Invalid or low stock' });
         return;
     }
 
@@ -123,72 +80,48 @@ $('#add-cart').click(function () {
     let currentTotal = Number($('#item-price').val()) || 0;
     $('#item-price').val((currentTotal + itemTotal).toFixed(2));
 
-    Swal.fire({
-        icon: 'success',
-        title: 'Added to Cart'
-    });
+    Swal.fire('Added to Cart');
 
     $('#order-qty').val('');
     $('#item-dropdown').prop('selectedIndex', 0);
+    $('#balance').val('');
     loadItems();
 });
 
 $('#order-tbody').on('click', '.remove-btn', function () {
     let row = $(this).closest('tr');
-    let itemId = row.data('id');
+    let itemId = row.data('id').toString();
+    let itemIndex = cart_db.findIndex(cartItem => cartItem.itemId === itemId);
 
-    let index = cart_db.findIndex(item => item.itemId === itemId.toString());
-    if (index !== -1) {
-        let removedItem = cart_db.splice(index, 1)[0];
-
+    if (itemIndex !== -1) {
+        let removedItem = cart_db.splice(itemIndex, 1)[0];
         let currentTotal = Number($('#item-price').val()) || 0;
         let newTotal = currentTotal - removedItem.amount;
         $('#item-price').val(newTotal.toFixed(2));
-
         row.remove();
         loadItems();
     }
-});
-
-$("#search-order").on("input", function () {
-    let text = $(this).val();
-    $("#order-table tr").each(function () {
-        let search = $(this).text();
-        if (search.includes(text)) {
-            $(this).show();
-        } else {
-            $(this).hide();
-        }
-    });
 });
 
 $('#process-btn').click(function () {
     let orderId = $('#order-id').val();
     let customerId = $('#customer-dropdown').val();
     let date = new Date().toLocaleDateString();
+    let balance = Number($('#balance').val());
 
-    if (!customerId) {
+    if (!customerId || cart_db.length === 0 || isNaN(balance) || balance < 0) {
         Swal.fire({
-            icon: 'warning',
-            title: 'Select a customer'
-        });
-        return;
-    }
-
-    if (cart_db.length === 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Cart is empty'
+            title: 'Warning!',
+            html: 'Please check:<br>• Customer<br>• Cart<br>• Cash input',
+            icon: 'warning'
         });
         return;
     }
 
     let orderItems = [];
 
-    for (let i = 0; i < cart_db.length; i++) {
-        let cartItem = cart_db[i];
+    cart_db.forEach(cartItem => {
         let item = item_db.find(i => i.itemId.toString() === cartItem.itemId.toString());
-
         if (item) {
             item.qty -= cartItem.qty;
             orderItems.push({
@@ -197,26 +130,54 @@ $('#process-btn').click(function () {
                 amount: cartItem.amount
             });
         }
-    }
+    });
 
-    let order = {
+    order_db.push({
         orderId: Number(orderId),
         customerId: customerId,
         date: date,
         items: orderItems
-    };
+    });
 
-    order_db.push(order);
-
-    cart_db = [];
     $('#order-tbody').empty();
     $('#item-price').val('');
+    cart_db = [];
 
     Swal.fire({
-        icon: 'success',
-        title: 'Order Saved'
+        title: 'Order Saved!',
+        html: 'Do you want a slip?<br><br>',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+
+    }).then(result => {
+        if (result.isConfirmed) {
+            generatePDF(orderId, customerId, date, orderItems, balance);
+        }
     });
 
     clearForm();
     loadItems();
 });
+
+function generatePDF(orderId, customerId, date, orderItems, balance) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let content = '';
+
+    content = content + 'Order ID: ' + orderId + '\n';
+    content = content + 'Customer: ' + customerId + '\n';
+    content = content + 'Date: ' + date + '\n\n';
+
+    for (let i = 0; i < orderItems.length; i++) {
+        content = content + 'Item: ' + orderItems[i].itemId + ' | ';
+        content = content + 'Qty: ' + orderItems[i].qty + ' | ';
+        content = content + 'Price: Rs ' + orderItems[i].amount.toFixed(2) + '\n';
+    }
+
+    content = content + '\nBalance: Rs ' + balance.toFixed(2);
+
+    doc.text(content, 10, 10);
+    doc.save('Order_' + orderId + '_Slip.pdf');
+}

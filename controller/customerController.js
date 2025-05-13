@@ -24,7 +24,7 @@ $("#search-customer").on("input",function () {
     })
 })
 
-function loadCustomer() {
+export function loadCustomer() {
     $("#customer-tbody").empty();
     customer_db.map((item) => {
         let data = `<tr>
