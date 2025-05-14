@@ -9,13 +9,15 @@ $(document).ready(function () {
 });
 
 function nextOrderId() {
-    if (order_db.length === 0) return 3001;
-    let lastItem = order_db[order_db.length - 1].orderId;
-    return lastItem + 1;
+    if (order_db.length === 0) {
+        return 3001;
+    }
+    let lastOrder = order_db[order_db.length - 1].orderId;
+    return lastOrder + 1;
 }
 
 function clearForm() {
-    $("#order-id").val(nextOrderId());
+    $('#order-id').val(nextOrderId());
     $('#cash').val('');
     $('#discount').val('');
     $('#balance').val('');
@@ -25,27 +27,17 @@ function clearForm() {
     $('#customer-dropdown').prop('selectedIndex', 0);
 }
 
-$('#cash, #discount, #order-qty, #item-dropdown').on('input change', function () {
+$('#cash, #discount').on('input', function () {
     updateBalance();
 });
 
 function updateBalance() {
-    let itemId = $('#item-dropdown').val();
-    let item = item_db.find(i => i.itemId.toString() === itemId);
-    let price = item ? Number(item.price) : 0;
-
-    let qty = Number($('#order-qty').val()) || 0;
     let cash = Number($('#cash').val()) || 0;
     let discount = Number($('#discount').val()) || 0;
+    let total = Number($('#item-price').val()) || 0;
 
-    if (!item || qty <= 0) {
-        $('#balance').val('');
-        return;
-    }
-
-    let total = price * qty;
-    let discountAmount = total * (discount / 100);
-    let finalAmount = total - discountAmount;
+    let discountValue = total * (discount / 100);
+    let finalAmount = total - discountValue;
     let balance = cash - finalAmount;
 
     $('#balance').val(balance.toFixed(2));
@@ -58,6 +50,7 @@ $('#add-cart').click(function () {
     let date = new Date().toLocaleDateString();
 
     let item = item_db.find(i => i.itemId.toString() === itemId);
+
     if (!item || item.qty < qty || qty <= 0) {
         Swal.fire({ icon: 'warning', title: 'Invalid or low stock' });
         return;
@@ -84,21 +77,25 @@ $('#add-cart').click(function () {
 
     $('#order-qty').val('');
     $('#item-dropdown').prop('selectedIndex', 0);
-    $('#balance').val('');
+
+    updateBalance();
     loadItems();
 });
 
 $('#order-tbody').on('click', '.remove-btn', function () {
     let row = $(this).closest('tr');
     let itemId = row.data('id').toString();
-    let itemIndex = cart_db.findIndex(cartItem => cartItem.itemId === itemId);
 
-    if (itemIndex !== -1) {
-        let removedItem = cart_db.splice(itemIndex, 1)[0];
+    let index = cart_db.findIndex(item => item.itemId === itemId);
+    if (index !== -1) {
+        let removed = cart_db.splice(index, 1)[0];
         let currentTotal = Number($('#item-price').val()) || 0;
-        let newTotal = currentTotal - removedItem.amount;
+        let newTotal = currentTotal - removed.amount;
+
         $('#item-price').val(newTotal.toFixed(2));
         row.remove();
+
+        updateBalance();
         loadItems();
     }
 });
@@ -121,7 +118,7 @@ $('#process-btn').click(function () {
     let orderItems = [];
 
     cart_db.forEach(cartItem => {
-        let item = item_db.find(i => i.itemId.toString() === cartItem.itemId.toString());
+        let item = item_db.find(i => i.itemId.toString() === cartItem.itemId);
         if (item) {
             item.qty -= cartItem.qty;
             orderItems.push({
@@ -149,7 +146,6 @@ $('#process-btn').click(function () {
         showCancelButton: true,
         confirmButtonText: 'Yes',
         cancelButtonText: 'No'
-
     }).then(result => {
         if (result.isConfirmed) {
             generatePDF(orderId, customerId, date, orderItems, balance);
@@ -164,20 +160,22 @@ function generatePDF(orderId, customerId, date, orderItems, balance) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    let content = '';
+    let text = "";
 
-    content = content + 'Order ID: ' + orderId + '\n';
-    content = content + 'Customer: ' + customerId + '\n';
-    content = content + 'Date: ' + date + '\n\n';
+    text = text + "Order ID: " + orderId + "\n";
+    text = text + "Customer: " + customerId + "\n";
+    text = text + "Date: " + date + "\n\n";
 
     for (let i = 0; i < orderItems.length; i++) {
-        content = content + 'Item: ' + orderItems[i].itemId + ' | ';
-        content = content + 'Qty: ' + orderItems[i].qty + ' | ';
-        content = content + 'Price: Rs ' + orderItems[i].amount.toFixed(2) + '\n';
+        let item = orderItems[i];
+        text = text + "Item: " + item.itemId + " | ";
+        text = text + "Qty: " + item.qty + " | ";
+        text = text + "Price: Rs " + item.amount.toFixed(2) + "\n";
     }
 
-    content = content + '\nBalance: Rs ' + balance.toFixed(2);
+    text = text + "\nBalance: Rs " + balance.toFixed(2);
 
-    doc.text(content, 10, 10);
-    doc.save('Order_' + orderId + '_Slip.pdf');
+    doc.text(text, 10, 10);
+    doc.save("Order_" + orderId + "_Slip.pdf");
 }
+
