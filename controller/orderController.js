@@ -9,11 +9,9 @@ $(document).ready(function () {
 });
 
 function nextOrderId() {
-    if (order_db.length === 0) {
-        return 3001;
-    }
-    let lastOrder = order_db[order_db.length - 1].orderId;
-    return lastOrder + 1;
+    if (order_db.length === 0) return 3001;
+        let lastOrder = order_db[order_db.length - 1].orderId;
+        return lastOrder + 1;
 }
 
 function clearForm() {
@@ -32,12 +30,16 @@ $('#cash, #discount').on('input', function () {
 });
 
 function updateBalance() {
-    let cash = Number($('#cash').val()) || 0;
-    let discount = Number($('#discount').val()) || 0;
-    let total = Number($('#item-price').val()) || 0;
+    let cash = Number($('#cash').val());
+    let discount = Number($('#discount').val());
+    let total = Number($('#item-price').val());
 
-    let discountValue = total * (discount / 100);
-    let finalAmount = total - discountValue;
+    if (isNaN(cash)) cash = 0;
+    if (isNaN(discount)) discount = 0;
+    if (isNaN(total)) total = 0;
+
+    let discountAmount = total * discount / 100;
+    let finalAmount = total - discountAmount;
     let balance = cash - finalAmount;
 
     $('#balance').val(balance.toFixed(2));
@@ -46,33 +48,60 @@ function updateBalance() {
 $('#add-cart').click(function () {
     let orderId = $('#order-id').val();
     let itemId = $('#item-dropdown').val();
-    let qty = Number($('#order-qty').val()) || 0;
+    let qty = Number($('#order-qty').val());
     let date = new Date().toLocaleDateString();
 
-    let item = item_db.find(i => i.itemId.toString() === itemId);
+    let selectedItem = null;
+    for (let i = 0; i < item_db.length; i++) {
+        if (item_db[i].itemId.toString() === itemId) {
+            selectedItem = item_db[i];
+            break;
+        }
+    }
 
-    if (!item || item.qty < qty || qty <= 0) {
-        Swal.fire({ icon: 'warning', title: 'Invalid or low stock' });
+    if (!selectedItem || qty <= 0 || selectedItem.qty < qty) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops!',
+            text: 'Please select a valid item and make sure the quantity is available.'
+        });
         return;
     }
 
-    let itemTotal = item.price * qty;
-    let existingItem = cart_db.find(cartItem => cartItem.itemId === itemId);
+    let itemTotal = selectedItem.price * qty;
 
-    if (existingItem) {
-        if (item.qty < existingItem.qty + qty) {
-            Swal.fire({ icon: 'warning', title: 'Not enough stock' });
-            return;
+    let found = false;
+    for (let i = 0; i < cart_db.length; i++) {
+        if (cart_db[i].itemId === itemId) {
+            if (selectedItem.qty < cart_db[i].qty + qty) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Not enough stock',
+                    text: 'There is not enough stock to add this quantity.'
+                });
+                return;
+            }
+
+            cart_db[i].qty += qty;
+            cart_db[i].amount += itemTotal;
+
+            let row = $(`#order-tbody tr[data-id="${itemId}"]`);
+            row.find('td:eq(1)').text(cart_db[i].qty);
+            row.find('td:eq(2)').text(cart_db[i].amount.toFixed(2));
+            found = true;
+            break;
         }
+    }
 
-        existingItem.qty += qty;
-        existingItem.amount += itemTotal;
-
-        let row = $(`#order-tbody tr[data-id="${itemId}"]`);
-        row.find('td:eq(1)').text(existingItem.qty);
-        row.find('td:eq(2)').text(existingItem.amount.toFixed(2));
-    } else {
-        cart_db.push({ orderId, itemId, qty, amount: itemTotal, date });
+    if (!found) {
+        let cartItem = {
+            orderId: orderId,
+            itemId: itemId,
+            qty: qty,
+            amount: itemTotal,
+            date: date
+        };
+        cart_db.push(cartItem);
 
         $('#order-tbody').append(`
             <tr data-id="${itemId}">
@@ -85,10 +114,15 @@ $('#add-cart').click(function () {
         `);
     }
 
-    let currentTotal = Number($('#item-price').val()) || 0;
+    let currentTotal = Number($('#item-price').val());
+    if (isNaN(currentTotal)) currentTotal = 0;
     $('#item-price').val((currentTotal + itemTotal).toFixed(2));
 
-    Swal.fire('Added to Cart');
+    Swal.fire({
+        icon: 'success',
+        title: 'Added to Cart',
+        text: 'The item was successfully added to your cart.'
+    });
 
     $('#order-qty').val('');
     $('#item-dropdown').prop('selectedIndex', 0);
@@ -101,17 +135,21 @@ $('#order-tbody').on('click', '.remove-btn', function () {
     let row = $(this).closest('tr');
     let itemId = row.data('id').toString();
 
-    let index = cart_db.findIndex(item => item.itemId === itemId);
-    if (index !== -1) {
-        let removed = cart_db.splice(index, 1)[0];
-        let currentTotal = Number($('#item-price').val()) || 0;
-        let newTotal = currentTotal - removed.amount;
+    for (let i = 0; i < cart_db.length; i++) {
+        if (cart_db[i].itemId === itemId) {
+            let removedItem = cart_db[i];
+            cart_db.splice(i, 1);
 
-        $('#item-price').val(newTotal.toFixed(2));
-        row.remove();
+            let currentTotal = Number($('#item-price').val());
+            let newTotal = currentTotal - removedItem.amount;
+            $('#item-price').val(newTotal.toFixed(2));
 
-        updateBalance();
-        loadItems();
+            row.remove();
+
+            updateBalance();
+            loadItems();
+            break;
+        }
     }
 });
 
@@ -123,26 +161,31 @@ $('#process-btn').click(function () {
 
     if (!customerId || cart_db.length === 0 || isNaN(balance) || balance < 0) {
         Swal.fire({
-            title: 'Warning!',
-            html: 'Please check:<br>• Customer<br>• Cart<br>• Cash input',
-            icon: 'warning'
+            icon: 'warning',
+            title: 'Please Check',
+            text: 'Make sure you selected a customer, added items to the cart, and entered valid cash.'
         });
         return;
     }
 
     let orderItems = [];
 
-    cart_db.forEach(cartItem => {
-        let item = item_db.find(i => i.itemId.toString() === cartItem.itemId);
-        if (item) {
-            item.qty -= cartItem.qty;
-            orderItems.push({
-                itemId: cartItem.itemId,
-                qty: cartItem.qty,
-                amount: cartItem.amount
-            });
+    for (let i = 0; i < cart_db.length; i++) {
+        let cartItem = cart_db[i];
+
+        for (let j = 0; j < item_db.length; j++) {
+            if (item_db[j].itemId.toString() === cartItem.itemId) {
+                item_db[j].qty -= cartItem.qty;
+                break;
+            }
         }
-    });
+
+        orderItems.push({
+            itemId: cartItem.itemId,
+            qty: cartItem.qty,
+            amount: cartItem.amount
+        });
+    }
 
     order_db.push({
         orderId: Number(orderId),
@@ -152,25 +195,24 @@ $('#process-btn').click(function () {
     });
 
     $('#order-tbody').empty();
-    let total = $('#item-price').val()
+    let total = $('#item-price').val();
     $('#item-price').val('');
     cart_db = [];
 
     Swal.fire({
-        title: 'Order Saved!',
-        html: 'Do you want a slip?<br><br>',
+        title: 'Order Saved',
+        text: 'Would you like to download the receipt?',
+        icon: 'success',
         showCancelButton: true,
         confirmButtonText: 'Yes',
         cancelButtonText: 'No'
-
     }).then(result => {
         if (result.isConfirmed) {
             generatePDF(orderId, customerId, date, orderItems, balance);
         }
     });
 
-    const sales = $('#sales-tbody');
-    sales.append(`
+    $('#sales-tbody').append(`
         <tr>
             <td>${orderId}</td>
             <td>${customerId}</td>
@@ -189,18 +231,17 @@ function generatePDF(orderId, customerId, date, orderItems, balance) {
 
     let text = "";
 
-    text = text + "Order ID: " + orderId + "\n";
-    text = text + "Customer: " + customerId + "\n";
-    text = text + "Date: " + date + "\n\n";
+    text += "Order ID: " + orderId + "\n";
+    text += "Customer: " + customerId + "\n";
+    text += "Date: " + date + "\n\n";
 
     for (let i = 0; i < orderItems.length; i++) {
-        let item = orderItems[i];
-        text = text + "Item: " + item.itemId + " | ";
-        text = text + "Qty: " + item.qty + " | ";
-        text = text + "Price: Rs " + item.amount.toFixed(2) + "\n";
+        text += "Item: " + orderItems[i].itemId + " | ";
+        text += "Qty: " + orderItems[i].qty + " | ";
+        text += "Price: Rs " + orderItems[i].amount.toFixed(2) + "\n";
     }
 
-    text = text + "\nBalance: Rs " + balance.toFixed(2);
+    text += "\nBalance: Rs " + balance.toFixed(2);
 
     doc.text(text, 10, 10);
     doc.save("Order_" + orderId + "_Slip.pdf");

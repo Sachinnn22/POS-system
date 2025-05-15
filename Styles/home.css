@@ -33,12 +33,13 @@
     height: 450px;
     background-size: cover;
     background-position: center;
-    animation: imageChange 8s infinite;
+    animation: imageChange infinite steps(1);
+    animation-duration: 8s;
 }
 
 @keyframes imageChange {
     0% {
-        background-image: url("../assests/images/cn-11134207-7r98o-lqehq537kvmgd1-removebg-preview.png");
+        background-image: url("../assests/images/8b993b9f70a49b2698697943bde67498.jpg_720x720q80.jpg");
     }
     33.33% {
         background-image: url("../assests/images/image_17_f448a12e-b9fe-4777-ae14-725a5bacc5a3.png");
@@ -47,6 +48,6 @@
         background-image: url("../assests/images/istockphoto-1359180038-612x612.jpg");
     }
     99.99% {
-        background-image: url("../assests/images/cn-11134207-7r98o-lqehq537kvmgd1-removebg-preview.png");
+        background-image: url("../assests/images/xr5hb_512-removebg-preview.png");
     }
 }
