@@ -63,7 +63,7 @@ $('#add-cart').click(function () {
         Swal.fire({
             icon: 'warning',
             title: 'Oops!',
-            text: 'Please select a valid item and make sure the quantity is available.'
+            text: 'Please check qty is low'
         });
         return;
     }
@@ -121,7 +121,7 @@ $('#add-cart').click(function () {
     Swal.fire({
         icon: 'success',
         title: 'Added to Cart',
-        text: 'The item was successfully added to your cart.'
+        text: 'The item added successfully '
     });
 
     $('#order-qty').val('');
@@ -163,7 +163,7 @@ $('#process-btn').click(function () {
         Swal.fire({
             icon: 'warning',
             title: 'Please Check',
-            text: 'Make sure you selected a customer, added items to the cart, and entered valid cash.'
+            text: 'invalid input found'
         });
         return;
     }
@@ -201,7 +201,7 @@ $('#process-btn').click(function () {
 
     Swal.fire({
         title: 'Order Saved',
-        text: 'Would you like to download the receipt?',
+        text: 'Want to see the bill',
         icon: 'success',
         showCancelButton: true,
         confirmButtonText: 'Yes',
@@ -212,14 +212,19 @@ $('#process-btn').click(function () {
         }
     });
 
-    $('#sales-tbody').append(`
-        <tr>
-            <td>${orderId}</td>
-            <td>${customerId}</td>
-            <td>${date}</td>
-            <td>${total}</td>
-        </tr>
-    `);
+    for (let i = 0; i < orderItems.length; i++) {
+        let orderItem = orderItems[i];
+        $('#sales-tbody').append(`
+            <tr>
+                <td>${orderId}</td>
+                <td>${customerId}</td>
+                <td>${date}</td>
+                <td>${orderItem.itemId}</td> 
+                <td>${orderItem.qty}</td>
+                <td>${orderItem.amount.toFixed(2)}</td>
+            </tr>
+        `);
+    }
 
     clearForm();
     loadItems();
