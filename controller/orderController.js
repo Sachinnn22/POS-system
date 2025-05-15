@@ -251,3 +251,30 @@ function generatePDF(orderId, customerId, date, orderItems, balance) {
     doc.text(text, 10, 10);
     doc.save("Order_" + orderId + "_Slip.pdf");
 }
+
+export function printSalesTable() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const headers = [["Order ID", "Customer ID", "Date", "Item ID", "Qty", "Total Amount"]];
+    const data = [];
+
+    $('#sales-tbody tr').each(function () {
+        const row = [];
+        $(this).find('td').each(function () {
+            row.push($(this).text());
+        });
+        data.push(row);
+    });
+
+    doc.autoTable({
+        head: headers,
+        body: data
+    });
+
+    doc.save("sales-report.pdf");
+}
+
+$("#sales-export").on('click',function () {
+    printSalesTable();
+})
