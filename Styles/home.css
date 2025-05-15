@@ -30,26 +30,24 @@
 
 .move {
     width: 450px;
-    height: 300px;
+    height: 450px;
     background-size: cover;
     background-position: center;
     animation: imageChange 8s infinite;
 }
 
 @keyframes imageChange {
-    /*0% {*/
-    /*    background-image: url("assests/images/cn-11134207-7r98o-lqehq537kvmgd1-removebg-preview.png");*/
-    /*}*/
-    /*25% {*/
-    /*    background-image: url("assests/images/G-SHOCK-ORIGINAL-GA-2300-1AER.jpg");*/
-    /*}*/
-    /*50% {*/
-    /*    background-image: url("assests/images/Naruchnye_chasy_luch_71950991.png");*/
-    /*}*/
-    /*75% {*/
-    /*    background-image: url("assests/images/cn-11134207-7r98o-lqehq537kvmgd1-removebg-preview.png");*/
-    /*}*/
-    /*100% {*/
-    /*    background-image: url("assests/images/G-SHOCK-ORIGINAL-GA-2300-1AER.jpg");*/
-    /*}*/
+    0% {
+        background-image: url("../assests/images/cn-11134207-7r98o-lqehq537kvmgd1-removebg-preview.png");
+    }
+    33.33% {
+        background-image: url("../assests/images/image_17_f448a12e-b9fe-4777-ae14-725a5bacc5a3.png");
+        /*background-image: url("../assests/images/G-SHOCK-ORIGINAL-GA-2300-1AER.jpg");*/
+    }
+    66.66% {
+        background-image: url("../assests/images/Naruchnye_chasy_luch_71950991.png");
+    }
+    99.99% {
+        background-image: url("../assests/images/cn-11134207-7r98o-lqehq537kvmgd1-removebg-preview.png");
+    }
 }

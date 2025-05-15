@@ -137,6 +137,7 @@ $('#process-btn').click(function () {
     });
 
     $('#order-tbody').empty();
+    let total = $('#item-price').val()
     $('#item-price').val('');
     cart_db = [];
 
@@ -151,6 +152,16 @@ $('#process-btn').click(function () {
             generatePDF(orderId, customerId, date, orderItems, balance);
         }
     });
+
+    const sales = $('#sales-tbody');
+    sales.append(`
+        <tr>
+            <td>${orderId}</td>
+            <td>${customerId}</td>
+            <td>${date}</td>
+            <td>${total}</td>
+        </tr>
+    `);
 
     clearForm();
     loadItems();
