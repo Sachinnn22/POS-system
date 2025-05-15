@@ -57,18 +57,33 @@ $('#add-cart').click(function () {
     }
 
     let itemTotal = item.price * qty;
+    let existingItem = cart_db.find(cartItem => cartItem.itemId === itemId);
 
-    cart_db.push({ orderId, itemId, qty, amount: itemTotal, date });
+    if (existingItem) {
+        if (item.qty < existingItem.qty + qty) {
+            Swal.fire({ icon: 'warning', title: 'Not enough stock' });
+            return;
+        }
 
-    $('#order-tbody').append(`
-        <tr data-id="${itemId}">
-            <td>${itemId}</td>
-            <td>${qty}</td>
-            <td>${itemTotal.toFixed(2)}</td>
-            <td>${date}</td>
-            <td><button class="btn btn-sm btn-danger remove-btn">Remove</button></td>
-        </tr>
-    `);
+        existingItem.qty += qty;
+        existingItem.amount += itemTotal;
+
+        let row = $(`#order-tbody tr[data-id="${itemId}"]`);
+        row.find('td:eq(1)').text(existingItem.qty);
+        row.find('td:eq(2)').text(existingItem.amount.toFixed(2));
+    } else {
+        cart_db.push({ orderId, itemId, qty, amount: itemTotal, date });
+
+        $('#order-tbody').append(`
+            <tr data-id="${itemId}">
+                <td>${itemId}</td>
+                <td>${qty}</td>
+                <td>${itemTotal.toFixed(2)}</td>
+                <td>${date}</td>
+                <td><button class="btn btn-sm btn-danger remove-btn">Remove</button></td>
+            </tr>
+        `);
+    }
 
     let currentTotal = Number($('#item-price').val()) || 0;
     $('#item-price').val((currentTotal + itemTotal).toFixed(2));
@@ -147,6 +162,7 @@ $('#process-btn').click(function () {
         showCancelButton: true,
         confirmButtonText: 'Yes',
         cancelButtonText: 'No'
+
     }).then(result => {
         if (result.isConfirmed) {
             generatePDF(orderId, customerId, date, orderItems, balance);
@@ -189,4 +205,3 @@ function generatePDF(orderId, customerId, date, orderItems, balance) {
     doc.text(text, 10, 10);
     doc.save("Order_" + orderId + "_Slip.pdf");
 }
-
