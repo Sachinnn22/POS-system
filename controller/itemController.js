@@ -29,7 +29,7 @@ export function loadItems() {
 
 function nextId() {
     if (item_db.length === 0) return 2001;
-    let lastItem = item_db[item_db.length - 1].itemId;
+    let lastItem = Number(item_db[item_db.length - 1].itemId);
     return lastItem + 1;
 }
 

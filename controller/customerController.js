@@ -40,7 +40,7 @@ export function loadCustomer() {
 
 function nextId() {
     if (customer_db.length === 0) return 1001;
-    let lastItem = customer_db[customer_db.length - 1].cusId;
+    let lastItem = Number(customer_db[customer_db.length - 1].cusId);
     return lastItem + 1;
 }
 
@@ -242,15 +242,6 @@ $('#customer-update').on('click', function () {
     }
 
     let index = customer_db.findIndex(customer => customer.cusId == Number(cusId));
-
-    if (index === -1) {
-        Swal.fire({
-            title: "Error",
-            text: "Customer not found to update",
-            icon: "error"
-        });
-        return;
-    }
 
     customer_db[index] = new CustomerModel(cusId, cusName, age, contact, address);
 

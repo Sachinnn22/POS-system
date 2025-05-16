@@ -37,7 +37,7 @@
 }
 
 @keyframes imageChange {
-    0% {
+    0%, 100% {
         background-image: url("../assests/images/8b993b9f70a49b2698697943bde67498.jpg_720x720q80.jpg");
     }
     25% {
@@ -47,9 +47,6 @@
         background-image: url("../assests/images/istockphoto-1359180038-612x612.jpg");
     }
     75% {
-        background-image: url("../assests/images/istockphoto-1359180038-612x612.jpg");
-    }
-    100% {
         background-image: url("../assests/images/xr5hb_512-removebg-preview.png");
     }
 }
