@@ -10,8 +10,8 @@ $(document).ready(function () {
 
 function nextOrderId() {
     if (order_db.length === 0) return 3001;
-        let lastOrder = order_db[order_db.length - 1].orderId;
-        return lastOrder + 1;
+    let lastOrder = order_db[order_db.length - 1].orderId;
+    return lastOrder + 1;
 }
 
 function clearForm() {
@@ -30,11 +30,17 @@ $('#cash, #discount').on('input', function () {
 });
 
 function updateBalance() {
-    let cash = Number($('#cash').val());
+    let cashInput = $('#cash').val().trim();
+
+    if (cashInput === '') {
+        $('#balance').val('');
+        return;
+    }
+
+    let cash = Number(cashInput);
     let discount = Number($('#discount').val());
     let total = Number($('#item-price').val());
 
-    if (isNaN(cash)) cash = 0;
     if (isNaN(discount)) discount = 0;
     if (isNaN(total)) total = 0;
 
@@ -277,4 +283,4 @@ export function printSalesTable() {
 
 $("#sales-export").on('click',function () {
     printSalesTable();
-})
+});
