@@ -184,8 +184,6 @@ $('#customer-delete').on('click', function () {
 });
 
 $('#customer-update').on('click', function () {
-    let contactPattern = /^0\d{9}$/;
-
     let cusId = $('#cusId').val()
     let cusName = $('#cusName').val();
     let age = $('#age').val();
