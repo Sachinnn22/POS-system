@@ -53,7 +53,6 @@ export function clear() {
 }
 
 function loadCustomerIds() {
-    console.log('Loading customer IDs...');
     $('#customer-dropdown').empty();
     $('#customer-dropdown').append($('<option>', {
         value: '',
@@ -171,7 +170,6 @@ $('#customer-delete').on('click', function () {
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!'
     }).then(result => {
-
         if (result.isConfirmed) {
             customer_db.splice(index, 1);
             loadCustomer();
